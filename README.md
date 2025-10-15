@@ -13,7 +13,9 @@ Available macros for validations are as below.
 - %mp_assertcols		: To see if columns(variables) are in expected condition (from sasjscore)    
 - %mp_assertcolvals	: To see if values in variables are in expected condition (from sasjscore)  
 - %mp_assertdsobs		: To see if # of observations is in expected condition (from sasjscore)  
-- %mp_assertscope		: To check macro scope (from sasjscore)    
+- %mp_assertscope		: To check macro scope (from sasjscore)
+  
+For usage of macros from sasjscore, please see [sasjscore](https://github.com/SASPAC/sasjscore).  
  
 ---
 
