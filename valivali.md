@@ -9,17 +9,17 @@
 ### Version information:
   
 - Package: valivali
-- Version: 0.01
-- Generated: 2025-10-16T08:00:45
+- Version: 0.0.2
+- Generated: 2025-10-17T18:54:15
 - Author(s): PharmaForest
 - Maintainer(s): PharmaForest
 - License: MIT
-- File SHA256: `F*A54545B01ACDB2F414BF205FEEEABCBF5F27733B2364BA0466219D687B2CD020` for this version
-- Content SHA256: `C*65AA58DB2741C66DEB0215B5522744761475DEC9A2D422F3F4860E195D90B285` for this version
+- File SHA256: `F*824E92834CAAC90707C436CAA7505239A40F5DEEF78A36BE4457FDD2AB10BD18` for this version
+- Content SHA256: `C*DFA834B4E67930248D802FD25E0DC9976E4F0D3152E3FED99A2081E4E1655F59` for this version
   
 ---
  
-# The `valivali` package, version: `0.01`;
+# The `valivali` package, version: `0.0.2`;
   
 ---
  
@@ -39,6 +39,7 @@ Available macros for validations are as below.
 - %mp_assertcolvals	: To see if values in variables are in expected condition (from sasjscore)  
 - %mp_assertdsobs		: To see if # of observations is in expected condition (from sasjscore)  
 - %mp_assertscope		: To check macro scope (from sasjscore)    
+- %set_tmp_lib				: To assign temporary libref for common location of Windows and other(Linux or Unix)  
 
 
 ### Usage
@@ -75,9 +76,10 @@ Required SAS Packages:
 The `valivali` package consists of the following content:
  
 1. [`%mp_assertdataset()` macro ](#mpassertdataset-macro-1 )
+2. [`%set_tmp_lib()` macro ](#settmplib-macro-2 )
   
  
-2. [License note](#license)
+3. [License note](#license)
   
 ---
  
@@ -147,6 +149,53 @@ https://github.com/PharmaForest/valivali
 ---
 Author:                 Ryo Nakaya
 Latest update Date: 2025-10-15
+---
+
+  
+---
+ 
+## `%set_tmp_lib()` macro <a name="settmplib-macro-2"></a> ######
+
+### Macro:
+
+    %set_tmp_lib
+
+### Purpose:
+
+    Create libref of TMP for specific location based on Windows or else(Linux, Unix)
+
+### Parameters:
+
+ - `lib` (required, default=TMP): Library name to assign. 
+
+ - `winpath` (required, default=C:\Temp): Location for windows  
+
+ - `otherpath` (required, default=/tmp): Location for other OS(Linux, Unix)  
+
+### Returns:
+
+    libref for location  
+
+### Sample code:
+
+~~~sas
+%set_tmp_lib(
+  lib=TMP,
+  winpath=C:\Temp,
+  otherpath=/tmp
+);
+~~~
+### Notes:
+
+ - Default paths are typical paths
+
+### URL:
+
+https://github.com/PharmaForest/valivali
+
+---
+Author:                 Ryo Nakaya
+Latest update Date: 2025-10-17
 ---
 
   
