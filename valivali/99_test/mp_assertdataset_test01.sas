@@ -5,6 +5,7 @@
 
 ### Expected result:  
 - Dataset test_results is generated with observation of PASS and FAIL.  
+- compare of _data1&_data2 and _data1&_data3 are done in a session to see if work.test_results.sas7bdat is updated(appended)   
 
 *//*** HELP END ***/
 
