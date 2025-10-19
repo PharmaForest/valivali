@@ -63,7 +63,7 @@ https://github.com/PharmaForest/valivali
 
 ---
 Author:                 Ryo Nakaya
-Latest update Date: 2025-10-15
+Latest update Date: 2025-10-19
 ---
 
 *//*** HELP END ***/
@@ -141,7 +141,7 @@ Latest update Date: 2025-10-15
 	  %let _mem=&outds.;
 	%end;
 
-	%if &_lib. ne WORK %then %do ;
+	%if %upcase(&_lib.) ne WORK %then %do;
 		proc copy in=&_lib. out=WORK noclone;
 		  select &_mem. ;
 		run;

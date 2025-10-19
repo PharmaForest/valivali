@@ -46,8 +46,3 @@ run;
   criterion=0,       		/* parameter in proc compare */
   method=absolute    /* parameter in proc compare */
 );
-
-/*delete temporary datasets*/
-proc datasets ;
-	delete _data1 _data2 _data3 ;
-run ; quit ;
