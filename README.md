@@ -1,4 +1,4 @@
-# valivali (Latest version 0.0.2 on 17Oct2025)
+# valivali (Latest version 0.0.3 on 19Oct2025)
 **Valivali is a validation toolbox** that provides utilities to test and validate SAS packages.  
 Use it during package creation and verification to ensure expected behavior and reproducible results.  
 Valivali loads {sasjscore} package developed by Allan Bowe when valivali is loaded and strongly influenced and powered by [sasjscore](https://github.com/SASPAC/sasjscore). You need to install {sasjscore} to use the package.   
@@ -51,7 +51,7 @@ Compares two SAS data sets using `PROC COMPARE` and asserts equality. Writes a c
 ~~~
 
  Author:     Ryo Nakaya  
- Latest Update Date:  2025-10-16
+ Latest Update Date:  2025-10-19
 
 ## %set_tmp_lib
 
@@ -89,6 +89,7 @@ In each test script, you can add below.
 ---
  
 ## Version history  
+0.0.3(19October2025)	: Modified %mp_assertdataset to handle different encoding issue when appending out dataset to different session(with different encoding)    
 0.0.2(17October2025)	: Added %set_tmp_lib  
 0.0.1(16October2025)	: Initial version
 
