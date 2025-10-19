@@ -80,7 +80,7 @@ Latest update Date: 2025-10-15
   outds=work.test_results /* output dataset */
 );
 
-  %local _ne _equal test_result;
+  %local _ne _equal test_result _lib _mem;
 
   proc compare base=&base. compare=&compare.
     out=_out outnoequal
@@ -128,6 +128,32 @@ Latest update Date: 2025-10-15
 			cats("compare=", symget('compare'))
 		);
     run;
+
+	/*To handle potential different encoding session, copy outds to work(with noclone) and delete outds,
+	and copy back outds from work for creating dataset with the current encoding*/
+
+	%if %index(&outds., .) %then %do;
+	  %let _lib=%scan(&outds.,1,.);
+	  %let _mem=%scan(&outds.,2,.);
+	%end;
+	%else %do;
+	  %let _lib=WORK;
+	  %let _mem=&outds.;
+	%end;
+
+	%if &_lib. ne WORK %then %do ;
+		proc copy in=&_lib. out=WORK noclone;
+		  select &_mem. ;
+		run;
+
+		proc datasets lib=&_lib. nolist;
+		  delete &_mem.;
+		quit;
+
+		proc copy in=WORK out=&_lib.;
+		  select &_mem.;
+		run;
+	%end ;
 
     proc append base=&outds. data=_assert_row force; run;
     proc datasets lib=work nolist; delete _assert_row; quit;
