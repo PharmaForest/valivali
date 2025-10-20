@@ -1,4 +1,4 @@
-# valivali (Latest version 0.0.3 on 19Oct2025)
+# valivali (Latest version 0.0.4 on 20Oct2025)
 **Valivali is a validation toolbox** that provides utilities to test and validate SAS packages.  
 Use it during package creation and verification to ensure expected behavior and reproducible results.  
 Valivali loads {sasjscore} package developed by Allan Bowe when valivali is loaded and strongly influenced and powered by [sasjscore](https://github.com/SASPAC/sasjscore). You need to install {sasjscore} to use the package.   
@@ -60,7 +60,7 @@ Assign library to locations for Windows or other(Linux, Unix). This can be used 
             
 ### Parameters:
 ~~~sas
- - `lib` (required, default=TMP): Library name to assign. 
+ - `lib` (required, default=TEMP): Library name to assign. 
  - `winpath` (required, default=C:\Temp): Location for windows  
  - `otherpath` (required, default=/tmp): Location for other OS(Linux, Unix)  
 ~~~
@@ -69,7 +69,7 @@ Assign library to locations for Windows or other(Linux, Unix). This can be used 
 In each test script, you can add below.
 ~~~sas
 %loadPackage(valivali)
-%set_tmp_lib() /* Assign TMP to common location */
+%set_tmp_lib() /* Assign TEMP to common location */
 
 /* test scripts like */
 %mp_assertdataset(
@@ -79,16 +79,17 @@ In each test script, you can add below.
   puttolog = Y,
   criterion= 1e-12,
   method   = absolute,
-  outds    = TMP.test_results /* Append to the file in the TMP library */
+  outds    = TEMP.test_results /* Append to the file in the TEMP library */
 )
 ~~~
 
  Author:     Ryo Nakaya  
- Latest Update Date:  2025-10-17  
+ Latest Update Date:  2025-10-20  
 
 ---
  
 ## Version history  
+0.0.4(20October2025)	: Modified default value of lib option in %set_tmp_lib      
 0.0.3(19October2025)	: Modified %mp_assertdataset to handle different encoding issue when appending out dataset to different session(with different encoding)    
 0.0.2(17October2025)	: Added %set_tmp_lib  
 0.0.1(16October2025)	: Initial version
