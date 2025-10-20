@@ -6,11 +6,11 @@
 
 ### Purpose:
 
-    Create libref of TMP for specific location based on Windows or else(Linux, Unix)
+    Create libref of TEMP(by default) for specific location based on Windows or else(Linux, Unix)
 
 ### Parameters:
 
- - `lib` (required, default=TMP): Library name to assign. 
+ - `lib` (required, default=TEMP): Library name to assign. 
 
  - `winpath` (required, default=C:\Temp): Location for windows  
 
@@ -24,7 +24,7 @@
 
 ~~~sas
 %set_tmp_lib(
-  lib=TMP,
+  lib=TEMP,
   winpath=C:\Temp,
   otherpath=/tmp
 );
@@ -39,13 +39,13 @@ https://github.com/PharmaForest/valivali
 
 ---
 Author:                 Ryo Nakaya
-Latest update Date: 2025-10-17
+Latest update Date: 2025-10-20
 ---
 
 *//*** HELP END ***/
 
 %macro set_tmp_lib(
-	lib=TMP,
+	lib=TEMP,
 	winpath=C:\Temp,
 	otherpath=/tmp );
   %if %upcase(&SYSSCP) = WIN %then %do;
