@@ -1,4 +1,4 @@
-# valivali (Latest version 0.0.5 on 30Oct2025)
+# valivali (Latest version 0.1.0 on 30Oct2025)
 **Valivali is a validation toolbox** that provides utilities to test and validate SAS packages.  
 Use it during package creation and verification to ensure expected behavior and reproducible results.  
 Valivali loads {sasjscore} package developed by Allan Bowe when valivali is loaded and strongly influenced and powered by [sasjscore](https://github.com/SASPAC/sasjscore). You need to install {sasjscore} to use the package.   
@@ -14,7 +14,8 @@ Available macros for validations are as below.
 - %mp_assertcolvals	: To see if values in variables are in expected condition (from sasjscore)  
 - %mp_assertdsobs		: To see if # of observations is in expected condition (from sasjscore)  
 - %mp_assertscope		: To check macro scope (from sasjscore)
-- %set_tmp_lib      : To assign temporary libref for common location of Windows and other(Linux or Unix)  
+- %set_tmp_lib      : To assign temporary libref for common location of Windows and other(Linux or Unix)
+- %create_report    : To create validation report in RTF format  
   
 For usage of macros from sasjscore, please see [sasjscore](https://github.com/SASPAC/sasjscore).  
  
@@ -61,10 +62,10 @@ Assign library to locations for Windows or other(Linux, Unix). This can be used 
             
 ### Parameters:
 ~~~sas
- - `lib` (optional, default=TEMP): Library name to assign. 
- - `winpath` (optional, default=C:\Temp): Location for windows  
- - `otherpath` (optional, default=/tmp): Location for other OS(Linux, Unix)
- - `newfolder` (optional): New folder in the path  
+ - `lib` (optional, default=TEMP)        : Library name to assign. 
+ - `winpath` (optional, default=C:\Temp) : Location for windows  
+ - `otherpath` (optional, default=/tmp)  : Location for other OS(Linux, Unix)
+ - `newfolder` (optional)                : New folder in the path  
 ~~~
 
 ### Example usage:
@@ -89,8 +90,62 @@ In each test script, you can add below.
  Latest Update Date:  2025-10-30  
 
 ---
- 
+
+## %create_report
+
+### Purpose:
+Generates an RTF **Validation Report** using ODS RTF and PROC ODSTEXT/PROC REPORT. Reads *description.sas* from a SAS Package source folder (via `sourcelocation`) to display package name, version, author, and required packages in the header.
+            
+### Parameters:
+~~~sas
+- `sourcelocation` (optional)  : Path to a SAS package **source folder** containing `description.sas`.  
+  If blank, the header shows placeholder values for Package/Version/ReqPackages.  
+- `reporter` (required)        : Person responsible for the report, printed under the title.  
+- `general` (optional)         : Introductory remarks shown in the *General Information* section.  
+- `requirements` (optional)    : Bullet-like text for the *Requirements* section. Supports `^{newline}` escapes.  
+- `results` (optional)         : Dataset name with three columns: `test_description`, `test_result` (`PASS`/`FAIL`), and `test_comments`.  
+  If not provided, the macro creates a small `dummy_results` dataset.  
+- `additional` (optional)      : Free text printed in the *Additional comments* section.  
+- `references` (optional)      : Reference URLs or document titles, each separated with `^{newline}`.  
+- `outrtflocation` (required)  : Existing folder path where the RTF file will be written.  
+~~~
+
+### Example usage:
+~~~sas
+/* To see sample RTF */
+%create_report(
+  outrtflocation = C:\Temp
+) ;
+
+/* To create your package validation report */
+%create_report(
+  sourcelocation = /folder/to/yourpackage ,
+  reporter       = yourname,
+  general        = %nrstr(This is general information for the package and validation.),
+  requirements   = %nrstr(
+   - %<check_1> ^{newline}
+    Confirm macro variable resolution. ^{newline}
+   - %<check_2> ^{newline}
+    Confirm date formatting and newline rendering.
+  ),
+  results        = temp.mypackage_test, /* In combination with test results created with assert macros and lib macro `%set_tmp_lib` */
+  additional     = %nrstr(No additional comments.),
+  references     = %nrstr(
+    https://company.example/validation ^{newline}
+    Document reference
+  ),
+  outrtflocation = /folder/to/output
+);
+
+~~~
+
+ Author:     Ryo Nakaya  
+ Latest Update Date:  2025-10-30  
+
+---
+
 ## Version history  
+0.1.0(30October2025)	: Added %create_report       
 0.0.5(30October2025)	: Added new parameter(newfolder=) in %set_tmp_lib      
 0.0.4(20October2025)	: Modified default value of lib option in %set_tmp_lib      
 0.0.3(19October2025)	: Modified %mp_assertdataset to handle different encoding issue when appending out dataset to different session(with different encoding)    
