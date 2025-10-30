@@ -9,17 +9,17 @@
 ### Version information:
   
 - Package: valivali
-- Version: 0.0.4
-- Generated: 2025-10-20T09:53:09
+- Version: 0.0.5
+- Generated: 2025-10-30T09:22:55
 - Author(s): PharmaForest
 - Maintainer(s): PharmaForest
 - License: MIT
-- File SHA256: `F*448B52359845D602C300A2B4C065D36C09DB5BCCC2F7F9F8AB74134695B3A5AE` for this version
-- Content SHA256: `C*237283B769F2322AFCD1508CE3280EF1009771125ED3FCFD179FCEA557878E61` for this version
+- File SHA256: `F*0758B39D3365BAA1DD84E01958CCBF9BDA5E98A3D55DD5EC5B3D829AF5FDB8BF` for this version
+- Content SHA256: `C*7139F5A607876DF5B55D22F555EE7546666BE5209C4CF306A3FBA8BAA3F0E49D` for this version
   
 ---
  
-# The `valivali` package, version: `0.0.4`;
+# The `valivali` package, version: `0.0.5`;
   
 ---
  
@@ -172,9 +172,11 @@ Latest update Date: 2025-10-19
 
  - `otherpath` (required, default=/tmp): Location for other OS(Linux, Unix)  
 
+ - `newfolder` (optional): New folder in the path  
+
 ### Returns:
 
-    libref for location  
+    libref for location or new folder in location (if newfolder is specified)   
 
 ### Sample code:
 
@@ -182,7 +184,8 @@ Latest update Date: 2025-10-19
 %set_tmp_lib(
   lib=TEMP,
   winpath=C:\Temp,
-  otherpath=/tmp
+  otherpath=/tmp,
+  newfolder=test
 );
 ~~~
 ### Notes:
@@ -195,7 +198,7 @@ https://github.com/PharmaForest/valivali
 
 ---
 Author:                 Ryo Nakaya
-Latest update Date: 2025-10-20
+Latest update Date: 2025-10-30
 ---
 
   
