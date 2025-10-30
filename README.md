@@ -1,4 +1,4 @@
-# valivali (Latest version 0.0.4 on 20Oct2025)
+# valivali (Latest version 0.0.5 on 30Oct2025)
 **Valivali is a validation toolbox** that provides utilities to test and validate SAS packages.  
 Use it during package creation and verification to ensure expected behavior and reproducible results.  
 Valivali loads {sasjscore} package developed by Allan Bowe when valivali is loaded and strongly influenced and powered by [sasjscore](https://github.com/SASPAC/sasjscore). You need to install {sasjscore} to use the package.   
@@ -14,6 +14,7 @@ Available macros for validations are as below.
 - %mp_assertcolvals	: To see if values in variables are in expected condition (from sasjscore)  
 - %mp_assertdsobs		: To see if # of observations is in expected condition (from sasjscore)  
 - %mp_assertscope		: To check macro scope (from sasjscore)
+- %set_tmp_lib      : To assign temporary libref for common location of Windows and other(Linux or Unix)  
   
 For usage of macros from sasjscore, please see [sasjscore](https://github.com/SASPAC/sasjscore).  
  
@@ -60,16 +61,17 @@ Assign library to locations for Windows or other(Linux, Unix). This can be used 
             
 ### Parameters:
 ~~~sas
- - `lib` (required, default=TEMP): Library name to assign. 
- - `winpath` (required, default=C:\Temp): Location for windows  
- - `otherpath` (required, default=/tmp): Location for other OS(Linux, Unix)  
+ - `lib` (optional, default=TEMP): Library name to assign. 
+ - `winpath` (optional, default=C:\Temp): Location for windows  
+ - `otherpath` (optional, default=/tmp): Location for other OS(Linux, Unix)
+ - `newfolder` (optional): New folder in the path  
 ~~~
 
 ### Example usage:
 In each test script, you can add below.
 ~~~sas
 %loadPackage(valivali)
-%set_tmp_lib() /* Assign TEMP to common location */
+%set_tmp_lib(newfolder=test) /* Assign TEMP to common location */
 
 /* test scripts like */
 %mp_assertdataset(
@@ -84,11 +86,12 @@ In each test script, you can add below.
 ~~~
 
  Author:     Ryo Nakaya  
- Latest Update Date:  2025-10-20  
+ Latest Update Date:  2025-10-30  
 
 ---
  
 ## Version history  
+0.0.5(30October2025)	: Added new parameter(newfolder=) in %set_tmp_lib      
 0.0.4(20October2025)	: Modified default value of lib option in %set_tmp_lib      
 0.0.3(19October2025)	: Modified %mp_assertdataset to handle different encoding issue when appending out dataset to different session(with different encoding)    
 0.0.2(17October2025)	: Added %set_tmp_lib  
