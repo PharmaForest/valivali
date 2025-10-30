@@ -9,17 +9,17 @@
 ### Version information:
   
 - Package: valivali
-- Version: 0.0.5
-- Generated: 2025-10-30T09:35:16
+- Version: 0.1.0
+- Generated: 2025-10-30T20:28:19
 - Author(s): PharmaForest
 - Maintainer(s): PharmaForest
 - License: MIT
-- File SHA256: `F*1DAC7D052FC52BFC66DE0A4E87016C5B047C9576085FF6C7A8CBAFF19350AC5F` for this version
-- Content SHA256: `C*D46B3D492425E74149097AF3F964E919B5617D2C9498E99C35527338DE8BB4A7` for this version
+- File SHA256: `F*CB7659FBAA09E8566FF720EF2811F83C3E955557098BCEABA47C7C7875FFB523` for this version
+- Content SHA256: `C*3E0300443917F3E0977D9A2D94782BBE4B17B2DFF829B8E6BD3A52AE7C6E6192` for this version
   
 ---
  
-# The `valivali` package, version: `0.0.5`;
+# The `valivali` package, version: `0.1.0`;
   
 ---
  
@@ -40,6 +40,7 @@ Available macros for validations are as below.
 - %mp_assertdsobs		: To see if # of observations is in expected condition (from sasjscore)  
 - %mp_assertscope		: To check macro scope (from sasjscore)    
 - %set_tmp_lib				: To assign temporary libref for common location of Windows and other(Linux or Unix)  
+- %create_report			: To create validation report rtf  
 
 
 ### Usage
@@ -75,15 +76,90 @@ Required SAS Packages:
 # The `valivali` package content
 The `valivali` package consists of the following content:
  
-1. [`%mp_assertdataset()` macro ](#mpassertdataset-macro-1 )
-2. [`%set_tmp_lib()` macro ](#settmplib-macro-2 )
+1. [`%create_report()` macro ](#createreport-macro-1 )
+2. [`%mp_assertdataset()` macro ](#mpassertdataset-macro-2 )
+3. [`%set_tmp_lib()` macro ](#settmplib-macro-3 )
   
  
-3. [License note](#license)
+4. [License note](#license)
   
 ---
  
-## `%mp_assertdataset()` macro <a name="mpassertdataset-macro-1"></a> ######
+## `%create_report()` macro <a name="createreport-macro-1"></a> ######
+
+### Macro:
+
+    %create_report
+
+### Purpose:
+
+    Generates an RTF **Validation Report** using ODS RTF and PROC ODSTEXT/PROC REPORT.
+    Reads *description.sas* from a SAS Package source folder (via `sourcelocation`)
+    to display package name, version, and required packages in the header.
+
+### Parameters:
+
+- `sourcelocation` (optional): Path to a SAS package **source folder** containing `description.sas`.  
+  If blank, the header shows placeholder values for Package/Version/ReqPackages.  
+
+- `reporter` (required): Person responsible for the report, printed under the title.  
+
+- `general` (optional): Introductory remarks shown in the *General Information* section.  
+
+- `requirements` (optional): Bullet-like text for the *Requirements* section. Supports `^{newline}` escapes.  
+
+- `results` (optional): Dataset name with three columns: `test_description`, `test_result` (`PASS`/`FAIL`), and `test_comments`.  
+  If not provided, the macro creates a small `dummy_results` dataset.  
+
+- `additional` (optional): Free text printed in the *Additional comments* section.  
+
+- `references` (optional): Reference URLs or document titles, each separated with `^{newline}`.  
+
+- `outrtflocation` (required): Existing folder path where the RTF file will be written.  
+
+### Sample code:
+
+~~~sas
+
+%create_report(
+  outrtflocation = C:\Temp
+) ;
+
+%create_report(
+  sourcelocation = C\Temp\mypackage ,
+  reporter = John,
+  general  = %nrstr(Validation of reporting utilities.),
+  requirements = %nrstr(
+   - %<check_1> ^{newline}
+    Confirm macro variable resolution. ^{newline}
+   - %<check_2> ^{newline}
+    Confirm date formatting and newline rendering.
+  ),
+  results = temp.mypackage_test,
+  additional = %nrstr(No additional comments.),
+  references = %nrstr(
+    https://company.example/validation ^{newline}
+    Document reference
+  ),
+  outrtflocation = C:\Temp
+);
+
+~~~
+
+### URL:
+https://github.com/PharmaForest/valivali
+
+---
+
+Author:                 Ryo Nakaya
+Latest update Date: 2025-10-30
+
+---
+
+  
+---
+ 
+## `%mp_assertdataset()` macro <a name="mpassertdataset-macro-2"></a> ######
 
 ### Macro:
 
@@ -154,7 +230,7 @@ Latest update Date: 2025-10-19
   
 ---
  
-## `%set_tmp_lib()` macro <a name="settmplib-macro-2"></a> ######
+## `%set_tmp_lib()` macro <a name="settmplib-macro-3"></a> ######
 
 ### Macro:
 
