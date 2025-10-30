@@ -10,12 +10,12 @@
   
 - Package: valivali
 - Version: 0.0.5
-- Generated: 2025-10-30T09:22:55
+- Generated: 2025-10-30T09:35:16
 - Author(s): PharmaForest
 - Maintainer(s): PharmaForest
 - License: MIT
-- File SHA256: `F*0758B39D3365BAA1DD84E01958CCBF9BDA5E98A3D55DD5EC5B3D829AF5FDB8BF` for this version
-- Content SHA256: `C*7139F5A607876DF5B55D22F555EE7546666BE5209C4CF306A3FBA8BAA3F0E49D` for this version
+- File SHA256: `F*1DAC7D052FC52BFC66DE0A4E87016C5B047C9576085FF6C7A8CBAFF19350AC5F` for this version
+- Content SHA256: `C*D46B3D492425E74149097AF3F964E919B5617D2C9498E99C35527338DE8BB4A7` for this version
   
 ---
  
@@ -166,11 +166,11 @@ Latest update Date: 2025-10-19
 
 ### Parameters:
 
- - `lib` (required, default=TEMP): Library name to assign. 
+ - `lib` (optional, default=TEMP): Library name to assign. 
 
- - `winpath` (required, default=C:\Temp): Location for windows  
+ - `winpath` (optional, default=C:\Temp): Location for windows  
 
- - `otherpath` (required, default=/tmp): Location for other OS(Linux, Unix)  
+ - `otherpath` (optional, default=/tmp): Location for other OS(Linux, Unix)  
 
  - `newfolder` (optional): New folder in the path  
 
