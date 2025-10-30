@@ -10,11 +10,11 @@
 
 ### Parameters:
 
- - `lib` (required, default=TEMP): Library name to assign. 
+ - `lib` (optional, default=TEMP): Library name to assign. 
 
- - `winpath` (required, default=C:\Temp): Location for windows  
+ - `winpath` (optional, default=C:\Temp): Location for windows  
 
- - `otherpath` (required, default=/tmp): Location for other OS(Linux, Unix)  
+ - `otherpath` (optional, default=/tmp): Location for other OS(Linux, Unix)  
 
  - `newfolder` (optional): New folder in the path  
 
