@@ -1,7 +1,7 @@
 Type: Package
 Package: valivali
 Title: valivali - validation toolbox -
-Version: 0.0.5
+Version: 0.1.0
 Author: PharmaForest
 Maintainer: PharmaForest
 License: MIT
@@ -26,6 +26,7 @@ Available macros for validations are as below.
 - %mp_assertdsobs		: To see if # of observations is in expected condition (from sasjscore)  
 - %mp_assertscope		: To check macro scope (from sasjscore)    
 - %set_tmp_lib				: To assign temporary libref for common location of Windows and other(Linux or Unix)  
+- %create_report			: To create validation report rtf  
 
 
 ### Usage
