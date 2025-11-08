@@ -108,7 +108,7 @@ Generates an RTF/PDF **Validation Report** using ODS RTF/PDF and PROC ODSTEXT/PR
 - `additional` (optional)      : Free text printed in the *Additional comments* section.  
 - `references` (optional)      : Reference URLs or document titles, each separated with `^{newline}`.  
 - `outfilelocation` (required)  : Existing folder path where the RTF/PDF file will be written.  
-  * `outrtflocation` was used by version 0.1.0, which can still be used instead of `outfilelocation` for compatibility.  
+  * `outrtflocation` was used in version 0.1.0 or earlier, which can still be used instead of `outfilelocation` for compatibility.  
 ~~~
 
 ### Example usage:
