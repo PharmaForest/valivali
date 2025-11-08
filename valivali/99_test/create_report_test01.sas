@@ -4,7 +4,7 @@
 - Unit test for the %create_report() macro
 
 ### Expected result:  
-- RTF file will be created in the folder.
+- RTF and PDF files will be created in the folder.
 
 *//*** HELP END ***/
 
@@ -23,5 +23,5 @@
     https://company.example/validation ^{newline}
     Document reference
   ),
-  outrtflocation = C:\Temp
+  outfilelocation = C:\Temp
 );

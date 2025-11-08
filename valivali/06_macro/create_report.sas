@@ -6,7 +6,7 @@
 
 ### Purpose:
 
-    Generates an RTF **Validation Report** using ODS RTF and PROC ODSTEXT/PROC REPORT.
+    Generates an RTF/PDF **Validation Report** using ODS RTF/PDF and PROC ODSTEXT/PROC REPORT.
     Reads *description.sas* from a SAS Package source folder (via `sourcelocation`)
     to display package name, version, and required packages in the header.
 
@@ -28,14 +28,15 @@
 
 - `references` (optional): Reference URLs or document titles, each separated with `^{newline}`.  
 
-- `outrtflocation` (required): Existing folder path where the RTF file will be written.  
+- `outfilelocation` (required): Existing folder path where the RTF/PDF file will be written.  
+   ** Note: `outrtflocation` was used by v0.1.0. Changed arguement name to cover RTF and PDF. It is kept in use in pallalel with the new arguement.  
 
 ### Sample code:
 
 ~~~sas
 
 %create_report(
-  outrtflocation = C:\Temp
+  outfilelocation = C:\Temp
 ) ;
 
 %create_report(
@@ -54,7 +55,7 @@
     https://company.example/validation ^{newline}
     Document reference
   ),
-  outrtflocation = C:\Temp
+  outfilelocation = C:\Temp
 );
 
 ~~~
@@ -65,7 +66,7 @@ https://github.com/PharmaForest/valivali
 ---
 
 Author:                 Ryo Nakaya
-Latest update Date: 2025-10-30
+Latest update Date: 2025-11-08
 
 ---
 
@@ -88,19 +89,25 @@ Latest update Date: 2025-10-30
 <Reference URL1 or document1> ^{newline}
 <Reference URL2 or document2> ^{newline}
   ),
-  outrtflocation = /* path for output rtf */
+  outfilelocation = ,/* path for output RTF/PDF */
+  outrtflocation = /* old arguement of outfilelocation */
   );
 
   /*===macro start===*/
 
-	/*Check outrtflocation*/
-  %if %superq(outrtflocation)= %then %do;
-    %put ERROR: The parameter OUTRTFLOCATION must be specified.;
+	/*Check outfilelocation*/
+  %if %superq(outfilelocation)= %then %do;
+   %if %superq(outrtflocation)= %then %do;
+    %put ERROR: The parameter OUTFILELOCATION must be specified.;
     %abort cancel;
+   %end;
+   %else %do;
+    %let outfilelocation = &outrtflocation;
+   %end;
   %end;
 
-  %if %sysfunc(fileexist(%superq(outrtflocation))) = 0 %then %do;
-    %put ERROR: The specified folder does not exist: %superq(outrtflocation);
+  %if %sysfunc(fileexist(%superq(outfilelocation))) = 0 %then %do;
+    %put ERROR: The specified folder does not exist: %superq(outfilelocation);
     %abort cancel;
   %end;
 
@@ -171,8 +178,9 @@ Latest update Date: 2025-10-30
 	ods escapechar = '^' ; /*escape character*/
 	options nodate nonumber linesize=256 topmargin=1in bottommargin=1in leftmargin=0.8in rightmargin=0.8in ;
 
+	/*create RTF*/
 	title; footnote;
-	ods rtf file="&outrtflocation./Validation_Report_&package._&version..rtf" style=journal startpage=no;
+	ods rtf file="&outfilelocation./Validation_Report_&package._&version..rtf" style=journal startpage=no;
 
 	proc odstext;
 	  p "Validation Report" /
@@ -267,7 +275,107 @@ Latest update Date: 2025-10-30
 
 	ods rtf close;
 	ods rtf startpage=yes;
+	title; footnote;
+
+	/*create PDF*/
+	title; footnote;
+	ods pdf file="&outfilelocation./Validation_Report_&package._&version..pdf" style=journal startpage=no;
+
+	proc odstext;
+	  p "Validation Report" /
+	    style=[just=c font_weight=bold font_size=28pt] ;
+	  p "&package (Version &version)" /
+	    style=[just=c font_weight=bold font_size=18pt] ;
+	  p "" /
+	    style=[just=c font_weight=bold font_size=12pt] ;
+	  p "&reporter" /
+	    style=[just=c font_size=12pt] ;
+	  p "" /
+	    style=[just=c font_weight=bold font_size=12pt] ;
+	  p "%sysfunc(today(), date9.)" /
+	    style=[just=c font_size=12pt] ;
+	  p "" /
+	    style=[just=c font_weight=bold font_size=12pt] ;
+
+	  p "General Information" / /*Section title*/
+	    style=[just=l font_weight=bold font_size=14pt] ;
+	  p "&general" /
+	    style=[just=l font_size=10pt] ;
+	  p "" /
+	    style=[just=l font_weight=bold font_size=10pt] ;
+
+	  p "Validation Environment" / /*Section title*/
+	    style=[just=l font_weight=bold font_size=14pt] ;
+	  p "OS: &SYSSCP" /
+	    style=[just=l font_size=10pt] ;
+	  p "SAS: &SYSVER" /
+	    style=[just=l font_size=10pt] ;
+	  p "Required Packages: &reqpackages" /
+	    style=[just=l font_size=10pt] ;
+	  p "Execution Datetime: %sysfunc(datetime(), datetime19.)" /
+	    style=[just=l font_size=10pt] ;
+	  p "" /
+	    style=[just=l font_weight=bold font_size=10pt] ;
+
+	  p "Authors" / /*Section title*/
+	    style=[just=l font_weight=bold font_size=14pt] ;
+	  p "&author" /
+	    style=[just=l font_size=10pt] ;
+	  p "" /
+	    style=[just=l font_weight=bold font_size=10pt] ;
+
+	  p "Requirements" / /*Section title*/
+	    style=[just=l font_weight=bold font_size=14pt] ;
+	  p "&requirements" /
+	    style=[just=l font_size=10pt] ;
+	  p "" /
+	    style=[just=l font_weight=bold font_size=10pt] ;
+
+	  p "Validation Records" / /*Section title*/
+	    style=[just=l font_weight=bold font_size=14pt] ;
+	run;
+
+	%if %superq(results)= %then %do ;
+	  %let results = dummy_results ;
+	%end ;
+	proc report data=&results. style(header)=[font_weight=bold font_style=roman font_size=11pt];
+	  columns test_description test_result test_comments;
+	  define test_description	/ display "Test Description" style(column)=[cellwidth=3.3in just=l] width=100 ;
+	  define test_result		/ display "Result" style(column)=[cellwidth=0.6in just=c] ;
+	  define test_comments	/ display "Comments" style(column)=[cellwidth=2.2in just=l] width=100 ;
+
+	  compute test_result;
+	    length _sty $200;
+	    _sty = "";  /* reset each row */
+	    select (upcase(strip(test_result)));
+	      when ("PASS") _sty = "style=[font_weight=bold color=green]";
+	      when ("FAIL") _sty = "style=[font_weight=bold color=red]";
+	      otherwise      _sty = "";  /* no special style */
+	    end;
+	    if _sty ne "" then call define(_col_, "style", _sty);
+	  endcomp;
+	run;
+
+	proc odstext;
+	  p "Additional comments" / /*Section title*/
+	    style=[just=l font_weight=bold font_size=14pt] ;
+	  p "&additional" /
+	    style=[just=l font_size=10pt] ;
+	  p "" /
+	    style=[just=l font_weight=bold font_size=10pt] ;
+
+	  p "References" / /*Section title*/
+	    style=[just=l font_weight=bold font_size=14pt] ;
+	  p "&references" /
+	    style=[just=l font_size=10pt] ;
+	  p "" /
+	    style=[just=l font_weight=bold font_size=10pt] ;
+	run;
+
+	ods pdf close;
+	ods pdf startpage=yes;
 
 	title; footnote;
+
 
 %mend ;
