@@ -1,4 +1,4 @@
-# valivali (Latest version 0.1.0 on 30Oct2025)
+# valivali (Latest version 0.1.1 on 08Nov2025)
 **Valivali is a validation toolbox** that provides utilities to test and validate SAS packages.  
 Use it during package creation and verification to ensure expected behavior and reproducible results.  
 Valivali loads {sasjscore} package developed by Allan Bowe when valivali is loaded and strongly influenced and powered by [sasjscore](https://github.com/SASPAC/sasjscore). You need to install {sasjscore} to use the package.   
@@ -94,7 +94,7 @@ In each test script, you can add below.
 ## %create_report
 
 ### Purpose:
-Generates an RTF **Validation Report** using ODS RTF and PROC ODSTEXT/PROC REPORT. Reads *description.sas* from a SAS Package source folder (via `sourcelocation`) to display package name, version, author, and required packages in the header.
+Generates an RTF/PDF **Validation Report** using ODS RTF/PDF and PROC ODSTEXT/PROC REPORT. Reads *description.sas* from a SAS Package source folder (via `sourcelocation`) to display package name, version, author, and required packages in the header.
             
 ### Parameters:
 ~~~sas
@@ -107,14 +107,15 @@ Generates an RTF **Validation Report** using ODS RTF and PROC ODSTEXT/PROC REPOR
   If not provided, the macro creates a small `dummy_results` dataset.  
 - `additional` (optional)      : Free text printed in the *Additional comments* section.  
 - `references` (optional)      : Reference URLs or document titles, each separated with `^{newline}`.  
-- `outrtflocation` (required)  : Existing folder path where the RTF file will be written.  
+- `outfilelocation` (required)  : Existing folder path where the RTF/PDF file will be written.  
+  * `outrtflocation` was used by version 0.1.0, which can still be used instead of `outfilelocation` for compatibility.  
 ~~~
 
 ### Example usage:
 ~~~sas
 /* To see sample RTF */
 %create_report(
-  outrtflocation = C:\Temp
+  outfilelocation = C:\Temp
 ) ;
 
 /* To create your package validation report */
@@ -134,17 +135,18 @@ Generates an RTF **Validation Report** using ODS RTF and PROC ODSTEXT/PROC REPOR
     https://company.example/validation ^{newline}
     Document reference
   ),
-  outrtflocation = /folder/to/output
+  outfilelocation = /folder/to/output
 );
 
 ~~~
 
  Author:     Ryo Nakaya  
- Latest Update Date:  2025-10-30  
+ Latest Update Date:  2025-11-08  
 
 ---
 
 ## Version history  
+0.1.1(08November2025)	: Modified %create_report to output RTF and PDF      
 0.1.0(30October2025)	: Added %create_report       
 0.0.5(30October2025)	: Added new parameter(newfolder=) in %set_tmp_lib      
 0.0.4(20October2025)	: Modified default value of lib option in %set_tmp_lib      
