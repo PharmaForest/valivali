@@ -9,17 +9,17 @@
 ### Version information:
   
 - Package: valivali
-- Version: 0.1.0
-- Generated: 2025-10-30T20:28:19
+- Version: 0.1.1
+- Generated: 2025-11-08T14:29:29
 - Author(s): PharmaForest
 - Maintainer(s): PharmaForest
 - License: MIT
-- File SHA256: `F*CB7659FBAA09E8566FF720EF2811F83C3E955557098BCEABA47C7C7875FFB523` for this version
-- Content SHA256: `C*3E0300443917F3E0977D9A2D94782BBE4B17B2DFF829B8E6BD3A52AE7C6E6192` for this version
+- File SHA256: `F*AE73B3F2749D2E5AD5C7F67C9C29F9790C4E2F9CA3C782FDA9694B1CEA57A7DF` for this version
+- Content SHA256: `C*D9A795CDEED97B2806E5D272C1BF8004A5950C05A26E995F0FA83573C1817A21` for this version
   
 ---
  
-# The `valivali` package, version: `0.1.0`;
+# The `valivali` package, version: `0.1.1`;
   
 ---
  
@@ -93,7 +93,7 @@ The `valivali` package consists of the following content:
 
 ### Purpose:
 
-    Generates an RTF **Validation Report** using ODS RTF and PROC ODSTEXT/PROC REPORT.
+    Generates an RTF/PDF **Validation Report** using ODS RTF/PDF and PROC ODSTEXT/PROC REPORT.
     Reads *description.sas* from a SAS Package source folder (via `sourcelocation`)
     to display package name, version, and required packages in the header.
 
@@ -115,14 +115,15 @@ The `valivali` package consists of the following content:
 
 - `references` (optional): Reference URLs or document titles, each separated with `^{newline}`.  
 
-- `outrtflocation` (required): Existing folder path where the RTF file will be written.  
+- `outfilelocation` (required): Existing folder path where the RTF/PDF file will be written.  
+   ** Note: `outrtflocation` was used by v0.1.0. Changed arguement name to cover RTF and PDF. It is kept in use in pallalel with the new arguement.  
 
 ### Sample code:
 
 ~~~sas
 
 %create_report(
-  outrtflocation = C:\Temp
+  outfilelocation = C:\Temp
 ) ;
 
 %create_report(
@@ -141,7 +142,7 @@ The `valivali` package consists of the following content:
     https://company.example/validation ^{newline}
     Document reference
   ),
-  outrtflocation = C:\Temp
+  outfilelocation = C:\Temp
 );
 
 ~~~
@@ -152,7 +153,7 @@ https://github.com/PharmaForest/valivali
 ---
 
 Author:                 Ryo Nakaya
-Latest update Date: 2025-10-30
+Latest update Date: 2025-11-08
 
 ---
 
