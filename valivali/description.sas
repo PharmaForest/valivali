@@ -1,7 +1,7 @@
 Type: Package
 Package: valivali
 Title: valivali - validation toolbox -
-Version: 0.1.1
+Version: 0.1.2
 Author: PharmaForest
 Maintainer: PharmaForest
 License: MIT

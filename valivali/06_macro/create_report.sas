@@ -66,7 +66,7 @@ https://github.com/PharmaForest/valivali
 ---
 
 Author:                 Ryo Nakaya
-Latest update Date: 2025-11-08
+Latest update Date: 2025-11-20
 
 ---
 
@@ -209,7 +209,7 @@ Latest update Date: 2025-11-08
 	    style=[just=l font_weight=bold font_size=14pt] ;
 	  p "OS: &SYSSCP" /
 	    style=[just=l font_size=10pt] ;
-	  p "SAS: &SYSVER" /
+	  p "SAS: &SYSVLONG" /
 	    style=[just=l font_size=10pt] ;
 	  p "Required Packages: &reqpackages" /
 	    style=[just=l font_size=10pt] ;
@@ -308,7 +308,7 @@ Latest update Date: 2025-11-08
 	    style=[just=l font_weight=bold font_size=14pt] ;
 	  p "OS: &SYSSCP" /
 	    style=[just=l font_size=10pt] ;
-	  p "SAS: &SYSVER" /
+	  p "SAS: &SYSVLONG" /
 	    style=[just=l font_size=10pt] ;
 	  p "Required Packages: &reqpackages" /
 	    style=[just=l font_size=10pt] ;
