@@ -1,4 +1,4 @@
-# valivali (Latest version 0.1.1 on 08Nov2025)
+# valivali (Latest version 0.1.2 on 20Nov2025)
 **Valivali is a validation toolbox** that provides utilities to test and validate SAS packages.  
 Use it during package creation and verification to ensure expected behavior and reproducible results.  
 Valivali loads {sasjscore} package developed by Allan Bowe when valivali is loaded and strongly influenced and powered by [sasjscore](https://github.com/SASPAC/sasjscore). You need to install {sasjscore} to use the package.   
@@ -15,7 +15,7 @@ Available macros for validations are as below.
 - %mp_assertdsobs		: To see if # of observations is in expected condition (from sasjscore)  
 - %mp_assertscope		: To check macro scope (from sasjscore)
 - %set_tmp_lib      : To assign temporary libref for common location of Windows and other(Linux or Unix)
-- %create_report    : To create validation report in RTF format  
+- %create_report    : To create validation report in RTF/PDF format  
   
 For usage of macros from sasjscore, please see [sasjscore](https://github.com/SASPAC/sasjscore).  
  
@@ -113,7 +113,7 @@ Generates an RTF/PDF **Validation Report** using ODS RTF/PDF and PROC ODSTEXT/PR
 
 ### Example usage:
 ~~~sas
-/* To see sample RTF */
+/* To see sample RTF/PDF */
 %create_report(
   outfilelocation = C:\Temp
 ) ;
@@ -141,11 +141,58 @@ Generates an RTF/PDF **Validation Report** using ODS RTF/PDF and PROC ODSTEXT/PR
 ~~~
 
  Author:     Ryo Nakaya  
- Latest Update Date:  2025-11-08  
+ Latest Update Date:  2025-11-20  
+
+---
+
+## How to use valivali in test of package
+
+In `test_yourmacro.sas` in test folder, you can write as below.
+~~~sas
+%loadPackage(valivali, mirror=pharmaforest)
+%set_tmp_lib(newfolder=test_result_folder)
+
+/*Example:
+Please create code here for creating expected dataset(adsl_expected) and output dataset(adsl_actual) by yourmacro
+*/
+
+%mp_assertdataset(
+  base     = work.adsl_expected,
+  compare  = work.adsl_actual,
+  desc     = Check ADSL content matches,
+  puttolog = Y,
+  criterion= 1e-12,
+  method   = absolute,
+  outds    = test_results
+)
+~~~
+
+In `zzz_create_report.sas` in test folder (zzz for run it lastly), you can write as below.
+~~~sas
+%loadPackage(valivali, mirror=pharmaforest)
+%set_tmp_lib(winpath=C:\Temp\test_result_folder)
+
+%create_report(
+  sourcelocation = /folder/to/yourpackage ,
+  reporter       = yourname,
+  general        = %nrstr(This is general information for the package and validation.),
+  requirements   = %nrstr(
+   - %<check_1> ^{newline}
+    Confirm macro variable resolution.
+  ),
+  results        = TEMP.test_results,
+  additional     = %nrstr(No additional comments.),
+  references     = %nrstr(
+    https://company.example/validation ^{newline}
+  ),
+  outfilelocation = /folder/to/output
+)
+~~~
 
 ---
 
 ## Version history  
+0.1.2(20November2025)	: Modified %create_report to use &SYSVLONG instead of &SYSVER for environment information      
 0.1.1(08November2025)	: Modified %create_report to output RTF and PDF      
 0.1.0(30October2025)	: Added %create_report       
 0.0.5(30October2025)	: Added new parameter(newfolder=) in %set_tmp_lib      
