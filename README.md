@@ -179,52 +179,6 @@ Generates an RTF/PDF **Validation Report** using ODS RTF/PDF and PROC ODSTEXT/PR
 
 ---
 
-## How to use valivali in test of package
-
-In `test_yourmacro.sas` in test folder, you can write as below.
-~~~sas
-%loadPackage(valivali, mirror=pharmaforest)
-%set_tmp_lib(newfolder=test_result_folder)
-
-/*Example:
-Please create code here for creating expected dataset(adsl_expected) and output dataset(adsl_actual) by yourmacro
-*/
-
-%mp_assertdataset(
-  base     = work.adsl_expected,
-  compare  = work.adsl_actual,
-  desc     = Check ADSL content matches,
-  puttolog = Y,
-  criterion= 1e-12,
-  method   = absolute,
-  outds    = test_results
-)
-~~~
-
-In `zzz_create_report.sas` in test folder (zzz for run it lastly), you can write as below.
-~~~sas
-%loadPackage(valivali, mirror=pharmaforest)
-%set_tmp_lib(winpath=C:\Temp\test_result_folder)
-
-%create_report(
-  sourcelocation = /folder/to/yourpackage ,
-  reporter       = yourname,
-  general        = %nrstr(This is general information for the package and validation.),
-  requirements   = %nrstr(
-   - %<check_1> ^{newline}
-    Confirm macro variable resolution.
-  ),
-  results        = TEMP.test_results,
-  additional     = %nrstr(No additional comments.),
-  references     = %nrstr(
-    https://company.example/validation ^{newline}
-  ),
-  outfilelocation = /folder/to/output
-)
-~~~
-
----
-
 ## Version history  
 0.2.0(23November2025)	: Added %mp_assertgraph, modified %mp_assertdataset(variable length adjusted), modified %create_report to connect with %mp_assertgraph to place graph outputs in the report     
 0.1.2(20November2025)	: Modified %create_report to use &SYSVLONG instead of &SYSVER for environment information      
