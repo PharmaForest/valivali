@@ -21,6 +21,8 @@ Available macros for validations are as below.
 For usage of macros from sasjscore, please see [sasjscore](https://github.com/SASPAC/sasjscore).  
 
 **Users need to understand how valivali works in %generatePackage(). Please see slides to learn the workflow ([how to use valivali](https://github.com/PharmaForest/valivali/blob/main/how_to_use_valivali.pdf)).**  
+Please also see example validation report([Example](https://github.com/PharmaForest/valivali/blob/main/Validation_Report_Example.pdf)).
+
 
 ---
 
