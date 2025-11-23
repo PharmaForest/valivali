@@ -19,7 +19,9 @@ Available macros for validations are as below.
 - %create_report    : To create validation report in RTF/PDF format  
   
 For usage of macros from sasjscore, please see [sasjscore](https://github.com/SASPAC/sasjscore).  
- 
+
+**Users need to understand how valivali works in %generatePackage(). Please see slides to learn the workflow ([how to use valivali](https://github.com/PharmaForest/valivali/how_to_use_valivali.pptx)).**  
+
 ---
 
 ## %mp_assertdataset
