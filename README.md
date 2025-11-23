@@ -59,7 +59,7 @@ Compares two SAS data sets using `PROC COMPARE` and asserts equality. Writes a c
 ## %mp_assertgraph
 
 ### Purpose:
-Assertion macro for graph comparison. It checks whether two graph files exist at the given paths (gpath1 and gpath2) before they are used to display graphs side by side in the report.
+Assertion macro for graph comparison. It checks whether two graph files exist at the given paths (gpath1 and gpath2) before they are used to display graphs side by side in the report. Note that the macro does not compare graphs, but is for preparation to place graphs in the validation report.
 
 ### Parameters:
 ~~~sas
