@@ -1,4 +1,4 @@
-# valivali (Latest version 0.1.2 on 20Nov2025)
+# valivali (Latest version 0.2.0 on 23Nov2025)
 **Valivali is a validation toolbox** that provides utilities to test and validate SAS packages.  
 Use it during package creation and verification to ensure expected behavior and reproducible results.  
 Valivali loads {sasjscore} package developed by Allan Bowe when valivali is loaded and strongly influenced and powered by [sasjscore](https://github.com/SASPAC/sasjscore). You need to install {sasjscore} to use the package.   
@@ -8,7 +8,8 @@ BTW, "valivali" means bad boy's vibes in Japanese😁
 <img src="https://github.com/PharmaForest/valivali/blob/main/valivali_logo.png?raw=true" alt="valivali" width="300"/>
 
 Available macros for validations are as below.
-- %mp_assertdataset	: To see datasets are equal by proc compare    
+- %mp_assertdataset	: To see datasets are equal by proc compare
+- %mp_assertgraph   : To prepare graph information for validation report     
 - %mp_assert				: To see if condition is TRUE (from sasjscore)  
 - %mp_assertcols		: To see if columns(variables) are in expected condition (from sasjscore)    
 - %mp_assertcolvals	: To see if values in variables are in expected condition (from sasjscore)  
@@ -53,7 +54,38 @@ Compares two SAS data sets using `PROC COMPARE` and asserts equality. Writes a c
 ~~~
 
  Author:     Ryo Nakaya  
- Latest Update Date:  2025-10-19
+ Latest Update Date:  2025-11-23
+
+## %mp_assertgraph
+
+### Purpose:
+Assertion macro for graph comparison. It checks whether two graph files exist at the given paths (gpath1 and gpath2) before they are used to display graphs side by side in the report.
+
+### Parameters:
+~~~sas
+ - `gpath1` (Conditionally required)  
+      Full path to the first graph file to be checked. Either gpath1 or gpath2 should exist.
+ - `gpath2` (Conditionally required)  
+      Full path to the second graph file to be checked. Either gpath1 or gpath2 should exist.
+ - `desc` (optional)  
+      Free-text description of the assertion.  
+      Stored in the output data set if `outds` is specified.
+ - `outds` (optional, default=work.test_results)  
+      Results table to append a CHECK record.
+~~~
+
+### Example usage:
+~~~sas
+%mp_assertgraph(
+  gpath1 = /path/to/graph1.png,
+  gpath2 = /path/to/graph2.png,
+  desc   = Checking two graphs exist before side-by-side display,
+  outds  = work.graph_checks
+);
+~~~
+
+ Author:     Ryo Nakaya  
+ Latest Update Date:  2025-11-23
 
 ## %set_tmp_lib
 
@@ -141,7 +173,7 @@ Generates an RTF/PDF **Validation Report** using ODS RTF/PDF and PROC ODSTEXT/PR
 ~~~
 
  Author:     Ryo Nakaya  
- Latest Update Date:  2025-11-20  
+ Latest Update Date:  2025-11-23  
 
 ---
 
@@ -192,6 +224,7 @@ In `zzz_create_report.sas` in test folder (zzz for run it lastly), you can write
 ---
 
 ## Version history  
+0.2.0(23November2025)	: Added %mp_assertgraph, modified %mp_assertdataset(variable length adjusted), modified %create_report to connect with %mp_assertgraph to place graph outputs in the report     
 0.1.2(20November2025)	: Modified %create_report to use &SYSVLONG instead of &SYSVER for environment information      
 0.1.1(08November2025)	: Modified %create_report to output RTF and PDF      
 0.1.0(30October2025)	: Added %create_report       
