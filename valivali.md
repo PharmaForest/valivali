@@ -9,17 +9,17 @@
 ### Version information:
   
 - Package: valivali
-- Version: 0.1.2
-- Generated: 2025-11-20T19:53:06
+- Version: 0.2.0
+- Generated: 2025-11-23T09:23:17
 - Author(s): PharmaForest
 - Maintainer(s): PharmaForest
 - License: MIT
-- File SHA256: `F*1EE43FAE888D3A2C7960DD4065C7E1906CFD0C7B37644419E3786301C35E9881` for this version
-- Content SHA256: `C*D6E9D15C4A2CB1E3B1D1BBBDCC8C699A563C5C1525BAB7A986255F9673125E10` for this version
+- File SHA256: `F*E41A7606DB1C5065CCBE7A19DD8C3708A58D27484603C74EFDF9E48B1B127EA7` for this version
+- Content SHA256: `C*EFBBB8EB9E2F1C4AE39A82B99AC63B02341C66FBC321C6067D60C818BCC564E6` for this version
   
 ---
  
-# The `valivali` package, version: `0.1.2`;
+# The `valivali` package, version: `0.2.0`;
   
 ---
  
@@ -34,6 +34,7 @@ By loading valivali, users can utilize valivali original macros in addition to {
 
 Available macros for validations are as below.
 - %mp_assertdataset	: To see datasets are equal by proc compare    
+- %mp_assertgraph		: To prepare graph information for validation report     
 - %mp_assert				: To see if condition is TRUE (from sasjscore)  
 - %mp_assertcols		: To see if columns(variables) are in expected condition (from sasjscore)    
 - %mp_assertcolvals	: To see if values in variables are in expected condition (from sasjscore)  
@@ -78,8 +79,8 @@ The `valivali` package consists of the following content:
  
 1. [`%create_report()` macro ](#createreport-macro-1 )
 2. [`%mp_assertdataset()` macro ](#mpassertdataset-macro-2 )
-3. [`%set_tmp_lib()` macro ](#settmplib-macro-3 )
-4. [`%setup_odsgraphics()` macro ](#setupodsgraphics-macro-4 )
+3. [`%mp_assertgraph()` macro ](#mpassertgraph-macro-3 )
+4. [`%set_tmp_lib()` macro ](#settmplib-macro-4 )
   
  
 5. [License note](#license)
@@ -148,13 +149,18 @@ The `valivali` package consists of the following content:
 
 ~~~
 
+### Notes:
+
+ - In case of reporting results from %assertgraph(), 300 px x 300 px or smaller is desirable to place two graphs in a row.
+   %create_report() will output graphs stored in locations which are described in `gpath1` and `gpath2` in %assertgraph().
+
 ### URL:
 https://github.com/PharmaForest/valivali
 
 ---
 
 Author:                 Ryo Nakaya
-Latest update Date: 2025-11-20
+Latest update Date: 2025-11-23
 
 ---
 
@@ -216,9 +222,59 @@ Latest update Date: 2025-11-20
 
  - `NE` (number of diffs) from PROC COMPARE is used to determine PASS (NE=0) or FAIL (NE>0).
 
- - If `outds` does not exist, it will be created with standard columns (`test_description`, `test_result`, `test_comments`).
+### URL:
 
- - This macro does not modify input data; it only reads them to compare.
+https://github.com/PharmaForest/valivali
+
+---
+Author:                 Ryo Nakaya
+Latest update Date: 2025-11-21
+---
+
+  
+---
+ 
+## `%mp_assertgraph()` macro <a name="mpassertgraph-macro-3"></a> ######
+
+### Macro:
+    %mp_assertgraph
+
+### Purpose:
+    Assertion macro for graph comparison.
+    It checks whether two graph files exist at the given paths (gpath1 and gpath2)
+    before they are used to display graphs side by side in the report.
+
+### Parameters:
+
+ - `gpath1` (Conditionally required)  
+      Full path to the first graph file to be checked. Either gpath1 or gpath2 should exist.
+
+ - `gpath2` (Conditionally required)  
+      Full path to the second graph file to be checked. Either gpath1 or gpath2 should exist.
+
+ - `desc` (optional)  
+      Free-text description of the assertion.  
+      Stored in the output data set if `outds` is specified.
+
+ - `outds` (optional, default=work.test_results)  
+      Results table to append a CHECK record.
+
+### Returns:
+
+ - Creates/updates the data set named in `outds`, prints CHECK to the log.  
+ - Variable `test_target` and `test_ID` will be created if `test_description` begins with () [].
+   (e.g. description of (%macroname1) [test01] xxxxx, test_target=%macroname1, test_ID=test01)  
+
+### Sample code:
+
+~~~sas
+%mp_assertgraph(
+  gpath1 = /path/to/graph1.png,
+  gpath2 = /path/to/graph2.png,
+  desc   = Checking two graphs exist before side-by-side display,
+  outds  = work.graph_checks
+);
+~~~
 
 ### URL:
 
@@ -226,13 +282,13 @@ https://github.com/PharmaForest/valivali
 
 ---
 Author:                 Ryo Nakaya
-Latest update Date: 2025-10-19
+Latest update Date: 2025-11-21
 ---
 
   
 ---
  
-## `%set_tmp_lib()` macro <a name="settmplib-macro-3"></a> ######
+## `%set_tmp_lib()` macro <a name="settmplib-macro-4"></a> ######
 
 ### Macro:
 
@@ -279,10 +335,6 @@ Author:                 Ryo Nakaya
 Latest update Date: 2025-10-30
 ---
 
-  
----
- 
-## `%setup_odsgraphics()` macro <a name="setupodsgraphics-macro-4"></a> ######
   
 ---
  
