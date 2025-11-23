@@ -60,13 +60,18 @@
 
 ~~~
 
+### Notes:
+
+ - In case of reporting results from %assertgraph(), 300 px x 300 px or smaller is desirable to place two graphs in a row.
+   %create_report() will output graphs stored in locations which are described in `gpath1` and `gpath2` in %assertgraph().
+
 ### URL:
 https://github.com/PharmaForest/valivali
 
 ---
 
 Author:                 Ryo Nakaya
-Latest update Date: 2025-11-20
+Latest update Date: 2025-11-23
 
 ---
 
@@ -94,6 +99,7 @@ Latest update Date: 2025-11-20
   );
 
   /*===macro start===*/
+  %local _app_lib _app_mem _has_graphrecs_rtf _has_graphrecs_pdf;
 
 	/*Check outfilelocation*/
   %if %superq(outfilelocation)= %then %do;
@@ -178,6 +184,8 @@ Latest update Date: 2025-11-20
 	ods escapechar = '^' ; /*escape character*/
 	options nodate nonumber linesize=256 topmargin=1in bottommargin=1in leftmargin=0.8in rightmargin=0.8in ;
 
+	ods listing close ;
+
 	/*create RTF*/
 	title; footnote;
 	ods rtf file="&outfilelocation./Validation_Report_&package._&version..rtf" style=journal startpage=no;
@@ -239,6 +247,45 @@ Latest update Date: 2025-11-20
 	%if %superq(results)= %then %do ;
 	  %let results = dummy_results ;
 	%end ;
+
+	  /* Appendix: Extract records with gpath1/gpath2 */
+	%let _has_graphrecs_rtf = 0;
+
+  /* libname.memname */
+	%if %index(&results.,.) %then %do;
+	  %let _app_lib = %scan(&results., 1, .);
+	  %let _app_mem = %scan(&results., 2, .);
+	%end;
+	%else %do;
+	  %let _app_lib = WORK;
+	  %let _app_mem = &results.;
+	%end;
+
+  /* Check existence of gpath1/gpath2 columns */
+  %let _has_graphrecs_rtf = 0;
+  %let _has_gpathcols_rtf = 0;
+
+  proc sql noprint;
+    select count(*) into :_has_gpathcols_rtf
+    from dictionary.columns
+    where libname = "%upcase(&_app_lib.)"
+      and memname = "%upcase(&_app_mem.)"
+      and upcase(name) in ("GPATH1","GPATH2");
+  quit;
+
+  /* Extract if gpath1/gpath2 exist */
+  %if &_has_gpathcols_rtf > 0 %then %do;
+    proc sql noprint;
+      create table _appendix_graphs_rtf as
+        select *
+        from &results.
+        where coalesce(strip(gpath1),'') ne "" 
+           or coalesce(strip(gpath2),'') ne "";
+      select count(*) into :_has_graphrecs_rtf from _appendix_graphs_rtf;
+    quit;
+  %end;
+
+  /*proc report*/
 	proc report data=&results. style(header)=[font_weight=bold font_style=roman font_size=11pt];
 	  columns test_description test_result test_comments;
 	  define test_description	/ display "Test Description" style(column)=[cellwidth=3.3in just=l] width=100 ;
@@ -251,6 +298,7 @@ Latest update Date: 2025-11-20
 	    select (upcase(strip(test_result)));
 	      when ("PASS") _sty = "style=[font_weight=bold color=green]";
 	      when ("FAIL") _sty = "style=[font_weight=bold color=red]";
+		  when ("CHECK") _sty = "style=[font_weight=bold color=orange]";
 	      otherwise      _sty = "";  /* no special style */
 	    end;
 	    if _sty ne "" then call define(_col_, "style", _sty);
@@ -273,9 +321,72 @@ Latest update Date: 2025-11-20
 	    style=[just=l font_weight=bold font_size=10pt] ;
 	run;
 
+	/* Appendix */
+	%if &_has_graphrecs_rtf > 0 %then %do;
+
+	  data _appendix_pairs_rtf;
+	    set _appendix_graphs_rtf;
+	    length label $500;
+	    if not missing(test_target) and not missing(test_ID) then
+	      label = "("||strip(test_target)||") ["||strip(test_ID)||"]";
+	    else
+	      label = "Plot";
+	  run;
+
+	  proc odstext;
+	    p "Appendix" /
+	      style=[just=l font_weight=bold font_size=14pt];
+	  run;
+
+	  proc report data=_appendix_pairs_rtf nowd
+	    style(report)=[just=l cellspacing=0 cellpadding=0]
+	    style(header)=[font_weight=bold]
+	    style(column)=[just=c];
+	    columns label gpath1 gpath2;
+
+	    define label / noprint;
+	    define gpath1 / display "Previous"
+	      style(column)=[cellwidth=3.2in];
+	    define gpath2 / display "Current"
+	      style(column)=[cellwidth=3.2in];
+
+	    compute gpath1;
+	      length _sty $200;
+	      if not missing(gpath1) then do;
+	        _sty   = 'style={preimage="' || trim(gpath1) ||
+	                 '" pretext="' || trim(label) ||'"}';
+	        gpath1 = '';
+	      end;
+	      else do;
+	        gpath1 = '';
+	        _sty = 'style={}';
+	      end;
+	      call define(_col_,'style',_sty);
+	    endcomp;
+
+	    compute gpath2;
+	      length _sty $200;
+	      if not missing(gpath2) then do;
+	        _sty   = 'style={preimage="' || trim(gpath2) ||
+	                 '" pretext="' || trim(label) ||'"}';
+	        gpath2 = ''; 
+	      end;
+	      else _sty = 'style={}';
+	      call define(_col_,'style',_sty);
+	    endcomp;
+	  run;
+
+	  proc datasets lib=work nolist;
+	    delete _appendix_graphs_rtf _appendix_pairs_rtf;
+	  quit;
+
+	%end;  /* &_has_graphrecs_rtf > 0 */
+
+
 	ods rtf close;
-	ods rtf startpage=yes;
 	title; footnote;
+
+
 
 	/*create PDF*/
 	title; footnote;
@@ -338,6 +449,39 @@ Latest update Date: 2025-11-20
 	%if %superq(results)= %then %do ;
 	  %let results = dummy_results ;
 	%end ;
+
+  /* Check existence of variable gpath1/gpath2 and non-missing record */
+  %let _has_graphrecs_pdf = 0;
+  %let _has_gpathcols_pdf = 0;
+
+  %if %index(&results.,.) %then %do;
+    %let _app_lib = %scan(&results., 1, .);
+    %let _app_mem = %scan(&results., 2, .);
+  %end;
+  %else %do;
+    %let _app_lib = WORK;
+    %let _app_mem = &results.;
+  %end;
+
+  proc sql noprint;
+    select count(*) into :_has_gpathcols_pdf
+    from dictionary.columns
+    where libname = "%upcase(&_app_lib.)"
+      and memname = "%upcase(&_app_mem.)"
+      and upcase(name) in ("GPATH1","GPATH2");
+  quit;
+
+  %if &_has_gpathcols_pdf > 0 %then %do;
+    proc sql noprint;
+      create table _appendix_graphs_pdf as
+        select *
+        from &results.
+        where coalesce(strip(gpath1),'') ne "" 
+           or coalesce(strip(gpath2),'') ne "";
+      select count(*) into :_has_graphrecs_pdf from _appendix_graphs_pdf;
+    quit;
+  %end;
+
 	proc report data=&results. style(header)=[font_weight=bold font_style=roman font_size=11pt];
 	  columns test_description test_result test_comments;
 	  define test_description	/ display "Test Description" style(column)=[cellwidth=3.3in just=l] width=100 ;
@@ -350,6 +494,7 @@ Latest update Date: 2025-11-20
 	    select (upcase(strip(test_result)));
 	      when ("PASS") _sty = "style=[font_weight=bold color=green]";
 	      when ("FAIL") _sty = "style=[font_weight=bold color=red]";
+		  when ("CHECK") _sty = "style=[font_weight=bold color=orange]";
 	      otherwise      _sty = "";  /* no special style */
 	    end;
 	    if _sty ne "" then call define(_col_, "style", _sty);
@@ -372,10 +517,67 @@ Latest update Date: 2025-11-20
 	    style=[just=l font_weight=bold font_size=10pt] ;
 	run;
 
-	ods pdf close;
-	ods pdf startpage=yes;
+  /* Appendix */
+  %if &_has_graphrecs_pdf > 0 %then %do;
+    proc odstext;
+      p "Appendix" /
+        style=[just=l font_weight=bold font_size=14pt] ;
+    run;
 
+	ods layout gridded columns=2;
+
+	data _null_;
+	  set _appendix_graphs_pdf;
+	    if not missing(test_target) and not missing(test_ID) then do;
+	      if substr(test_target,1,1) = '%' then
+	        /* To avoid warning by % instead using ^{unicode 0025} */
+	        _label = '(' || '^{unicode 0025}' || strip(substr(test_target,2)) ||') [' || strip(test_ID) || ']';
+	      else
+	        _label = '(' || strip(test_target) || ') [' || strip(test_ID) || ']';
+	    end;
+	    else do;
+	      _label = 'Plot';
+	    end;
+
+		call execute('ods region;');
+		call execute('proc odstext;');
+	    if not missing(gpath1) then do;
+	      call execute(
+	        '  p "^{style [preimage=''' || trim(gpath1) ||
+	        ''']}" / style=[just=c];'
+	      );
+	    end;
+	    call execute(
+	      '  p "%nrstr(' || trim(_label) ||
+	      ') Previous" / style=[just=c font_weight=bold font_size=10pt];'
+	    );
+	    call execute('run;');
+
+	    call execute('ods region;');
+	    call execute('proc odstext;');
+	    if not missing(gpath2) then do;
+	      call execute(
+	        '  p "^{style [preimage=''' || trim(gpath2) ||
+	        ''']}" / style=[just=c];'
+	      );
+	    end;
+	    call execute(
+	      '  p "%nrstr(' || trim(_label) ||
+	      ') Current" / style=[just=c font_weight=bold font_size=10pt];'
+	    );
+	    call execute('run;');
+	  run;
+	ods layout end;
+
+
+    proc datasets lib=work nolist;
+      delete _appendix_graphs_pdf;
+    quit;
+  %end;
+
+	ods pdf close;
 	title; footnote;
 
+	ods listing;
 
 %mend ;

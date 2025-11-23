@@ -1,7 +1,7 @@
 Type: Package
 Package: valivali
 Title: valivali - validation toolbox -
-Version: 0.1.2
+Version: 0.2.0
 Author: PharmaForest
 Maintainer: PharmaForest
 License: MIT
@@ -20,6 +20,7 @@ By loading valivali, users can utilize valivali original macros in addition to {
 
 Available macros for validations are as below.
 - %mp_assertdataset	: To see datasets are equal by proc compare    
+- %mp_assertgraph		: To prepare graph information for validation report     
 - %mp_assert				: To see if condition is TRUE (from sasjscore)  
 - %mp_assertcols		: To see if columns(variables) are in expected condition (from sasjscore)    
 - %mp_assertcolvals	: To see if values in variables are in expected condition (from sasjscore)  

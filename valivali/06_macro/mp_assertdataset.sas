@@ -53,17 +53,13 @@
 
  - `NE` (number of diffs) from PROC COMPARE is used to determine PASS (NE=0) or FAIL (NE>0).
 
- - If `outds` does not exist, it will be created with standard columns (`test_description`, `test_result`, `test_comments`).
-
- - This macro does not modify input data; it only reads them to compare.
-
 ### URL:
 
 https://github.com/PharmaForest/valivali
 
 ---
 Author:                 Ryo Nakaya
-Latest update Date: 2025-10-19
+Latest update Date: 2025-11-21
 ---
 
 *//*** HELP END ***/
@@ -114,13 +110,13 @@ Latest update Date: 2025-10-19
 
     %if not %sysfunc(exist(&outds.)) %then %do;
       data &outds.;
-        length test_description $256 test_result $4 test_comments $256;
+        length test_description $256 test_result $5 test_comments $256;
         stop;
       run;
     %end;
 
     data _assert_row;
-      length test_description $256 test_result $4 test_comments $256;
+      length test_description $256 test_result $5 test_comments $256;
       test_description = coalescec(symget('desc'),'');
       test_result      = symget('test_result');
       test_comments = catx(" ", "MP_ASSERTDATASET: proc compare",
