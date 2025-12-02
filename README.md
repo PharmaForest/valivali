@@ -1,4 +1,4 @@
-# valivali (Latest version 0.2.0 on 23Nov2025)
+# valivali (Latest version 0.2.1 on 2Dec2025)
 **Valivali is a validation toolbox** that provides utilities to test and validate SAS packages.  
 Use it during package creation and verification to ensure expected behavior and reproducible results.  
 Valivali loads {sasjscore} package developed by Allan Bowe when valivali is loaded and strongly influenced and powered by [sasjscore](https://github.com/SASPAC/sasjscore). You need to install {sasjscore} to use the package.   
@@ -182,6 +182,7 @@ Generates an RTF/PDF **Validation Report** using ODS RTF/PDF and PROC ODSTEXT/PR
 ---
 
 ## Version history  
+0.2.1(2December2025)	: Bug fixed in %create_report     
 0.2.0(23November2025)	: Added %mp_assertgraph, modified %mp_assertdataset(variable length adjusted), modified %create_report to connect with %mp_assertgraph to place graph outputs in the report     
 0.1.2(20November2025)	: Modified %create_report to use &SYSVLONG instead of &SYSVER for environment information      
 0.1.1(08November2025)	: Modified %create_report to output RTF and PDF      
