@@ -71,7 +71,7 @@ https://github.com/PharmaForest/valivali
 ---
 
 Author:                 Ryo Nakaya
-Latest update Date: 2025-11-23
+Latest update Date: 2025-12-02
 
 ---
 
@@ -327,11 +327,16 @@ Latest update Date: 2025-11-23
 	  data _appendix_pairs_rtf;
 	    set _appendix_graphs_rtf;
 	    length label $500;
-	    if not missing(test_target) and not missing(test_ID) then
-	      label = "("||strip(test_target)||") ["||strip(test_ID)||"]";
-	    else
-	      label = "Plot";
-	  run;
+	    if not missing(test_target) and not missing(test_ID) then do;
+	      if substr(test_target,1,1) = '%' then
+	        /* To avoid warning by % instead using ^{unicode 0025} */
+	        label = '(' || '^{unicode 0025}' || strip(substr(test_target,2)) ||') [' || strip(test_ID) || ']';
+	      else
+	        label = '(' || strip(test_target) || ') [' || strip(test_ID) || ']';
+	    end;
+	    else do;
+	      label = 'Plot';
+	    end;
 
 	  proc odstext;
 	    p "Appendix" /
@@ -541,16 +546,27 @@ Latest update Date: 2025-11-23
 
 		call execute('ods region;');
 		call execute('proc odstext;');
+
 	    if not missing(gpath1) then do;
 	      call execute(
 	        '  p "^{style [preimage=''' || trim(gpath1) ||
 	        ''']}" / style=[just=c];'
 	      );
+	      call execute(
+	        '  p "%nrstr(' || trim(_label) ||
+	        ') Previous" / style=[just=c font_weight=bold font_size=10pt];'
+	      );
 	    end;
-	    call execute(
-	      '  p "%nrstr(' || trim(_label) ||
-	      ') Previous" / style=[just=c font_weight=bold font_size=10pt];'
-	    );
+	    /* In case of no gpath1 */
+	    else do;
+	      call execute(
+	        '  p "" / style=[just=c];'
+	      );
+	      call execute(
+	        '  p "" / style=[just=c font_weight=bold font_size=10pt];'
+	      );
+	    end;
+
 	    call execute('run;');
 
 	    call execute('ods region;');
