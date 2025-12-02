@@ -9,17 +9,17 @@
 ### Version information:
   
 - Package: valivali
-- Version: 0.2.0
-- Generated: 2025-11-23T09:23:17
+- Version: 0.2.1
+- Generated: 2025-12-02T14:54:58
 - Author(s): PharmaForest
 - Maintainer(s): PharmaForest
 - License: MIT
-- File SHA256: `F*E41A7606DB1C5065CCBE7A19DD8C3708A58D27484603C74EFDF9E48B1B127EA7` for this version
-- Content SHA256: `C*EFBBB8EB9E2F1C4AE39A82B99AC63B02341C66FBC321C6067D60C818BCC564E6` for this version
+- File SHA256: `F*6E424C70979E40E37DDB73FF1924FFC1D83F5D0D665B1AEF8322774FF5563728` for this version
+- Content SHA256: `C*66AC3D38143F1F49A509F9AD692DFFEE19D29B50FFB602D5ABFE3FCF9439913E` for this version
   
 ---
  
-# The `valivali` package, version: `0.2.0`;
+# The `valivali` package, version: `0.2.1`;
   
 ---
  
@@ -160,7 +160,7 @@ https://github.com/PharmaForest/valivali
 ---
 
 Author:                 Ryo Nakaya
-Latest update Date: 2025-11-23
+Latest update Date: 2025-12-02
 
 ---
 
